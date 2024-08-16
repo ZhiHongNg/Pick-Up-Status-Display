@@ -1,0 +1,138 @@
+.good-count-number {
+  width: 50px;
+}
+
+.cart-good-count {
+  border-bottom: 1px solid #ddd;
+}
+
+.cart-good-count, .cart-item {
+  margin-bottom: 0;
+}
+
+.cart-item {
+  margin-bottom: 7.5px;
+}
+
+.cuepon-container {
+  display: flex;
+  justify-content: space-between;
+  background-color: white;
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.remark-container {
+  padding: 15px;
+  background-color: white;
+
+  .name {
+    padding-bottom: 15px;
+  }
+
+  textarea {
+    background-color: #f6f7f9;
+    width: calc(100% - 15px);
+    border-radius: 12px;
+    padding: 7.5px;
+    height: 80px;
+  }
+
+  margin-bottom: 15px;
+}
+
+.id-container {
+  padding: 15px;
+
+  background-color: white;
+
+  .title {
+    font-weight: bold;
+  }
+
+  .item {
+    margin: 24px 0;
+
+    .name {
+      margin-bottom: 7.5px;
+    }
+
+    .value {
+
+    }
+
+    .id-image {
+      width: 35vw;
+      height: 95px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      padding: 15px;
+      box-shadow: var(--default-shadow);
+      border-radius: var(--default-radius);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+
+      image {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto;
+      }
+
+      .upload {
+        font-size: 12px;
+        color: var(--second-text-color);
+        background: white;
+      }
+    }
+  }
+}
+
+.address-container {
+  margin-bottom: 15px;
+  margin-top: 15px;
+  background-color: white;
+  padding: 15px;
+  justify-content: space-between;
+  display: flex;
+
+  image {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+.creating {
+  opacity: .7;
+
+}
+
+.order-desc {
+  padding: 15px;
+  background-color: white;
+  margin-bottom: 15px;
+  margin-top: 15px;
+  .desc-item {
+    display: flex;
+    justify-content: flex-start;
+    padding: 5px;
+
+    .name {
+      width: 30vw;
+      color: #9b9b9b;
+    }
+
+    .value {
+    }
+  }
+}
+.order-status-container {
+  padding: 15px;
+  text-align: center;
+  .status-name {
+    font-size: 20px;
+    margin-bottom: 7.5px;
+    font-weight: bold;
+  }
+}

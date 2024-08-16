@@ -1,0 +1,15 @@
+export default {
+    id: 'ID',
+    openid: 'openid',
+    nickName: '昵称',
+    avatarUrl: '头像URL',
+    city: '城市',
+    country: '国家',
+    gender: '性别',
+    language: '语言',
+    phone: '电话',
+    session_key: '字符串',
+    create_time: '创建时间',
+    update_time: '修改时间',
+    'quick Search Fields': 'ID',
+}

@@ -1,0 +1,15 @@
+export default {
+    id: 'id',
+    openid: 'openid',
+    nickName: 'nickName',
+    avatarUrl: 'avatarUrl',
+    city: 'city',
+    country: 'country',
+    gender: 'gender',
+    language: 'language',
+    phone: 'phone',
+    session_key: 'session_key',
+    create_time: 'create_time',
+    update_time: 'update_time',
+    'quick Search Fields': 'id',
+}

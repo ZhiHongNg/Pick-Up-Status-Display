@@ -1,0 +1,14 @@
+[Unit]
+Description=WebSocket Service
+After=network.target
+
+[Service]
+ExecStart=php /var/www/html/websocket_server.php
+Restart=always
+User=root
+Group=root
+Environment=PATH=/usr/bin:/usr/local/bin
+Environment=PHP_HOME=/usr/bin
+
+[Install]
+WantedBy=multi-user.target
