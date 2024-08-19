@@ -60,9 +60,9 @@ RUN chmod +x /start.sh
 
 CMD ["/start.sh"]
 #build命令
-#docker build -t parking-screen .
+#docker build -t  pick-up-status-display_php .
 #run命令
-#docker run -d -p 6464:80 --name parking-screen parking-screen
+#docker run -d -p 6464:80 --name  pick-up-status-display_php  pick-up-status-display_php
 
 #打包
 #docker save -o D:\docker\mysql_8.0.tar 23b013c7c67d
