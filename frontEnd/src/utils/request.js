@@ -1,6 +1,6 @@
 // const apiUrl = 'https://apartment.cntopc.com/api/'
-// const oUrl = window.location.hostname + ':6464/';
-export const oUrl = '192.168.2.7:6464/'
+const oUrl = window.location.hostname + ':6464/';
+// export const oUrl = '192.168.2.7:6464/'
 export const apiUrl = 'http://' + oUrl + 'wechat/'
 
 export const baseUrl = 'http://' + oUrl

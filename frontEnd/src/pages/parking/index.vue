@@ -224,7 +224,6 @@ const connectWebSocket = () => {
   });
 }
 const handleNewMessage = (carsStatus) => {
-  console.log('carsStatus',carsStatus)
   let inCars = carsStatus.filter((item, index) => {
     if (item.status == 1) {
       return true
@@ -239,6 +238,7 @@ const handleNewMessage = (carsStatus) => {
       return false
     }
   })
+console.log('inCars',JSON.stringify(inCars))
   carIn(inCars)
   carOut(outCars)
 }
@@ -258,25 +258,28 @@ const carIn = ((carItems) => {
   }
 
   carItems.forEach((car, index) => {
-    let carItem
-    if (document.querySelectorAll('.car-item[entryId="' + car.entry_id + '"]').length > 0) {
-      carItem = document.querySelector('.car-item').cloneNode(true);
-    } else {
-      carItem = document.createElement('div')
+    if(document.querySelectorAll('.car-item[plate='+car.plate+']').length==0){
+      let carItem
+      if (document.querySelectorAll('.car-item[entryId="' + car.entry_id + '"]').length > 0) {
+        carItem = document.querySelector('.car-item').cloneNode(true);
+      } else {
+        carItem = document.createElement('div')
+      }
+      carItem.className = 'car-item new';
+      carItem.style = '    width: var(--itemWidth);height: var(--itemHeight);line-height: var(--itemHeight);top: 0;position: absolute;padding: var(--paddingY) var(--paddingX);border: 1px solid green;text-align: center;border-radius: 12px;flex: auto;font-size: var(--fontSize);text-shadow: -1px -1px 0 #393939, 1px -1px 0 #393939, -1px 1px 0 #393939, 1px 1px 0 #393939;'
+      carItem.setAttribute('entryTime', car.timestamp);
+      carItem.setAttribute('plate', car.plate);
+      carItem.setAttribute('entryid', car.entry_id);
+      carItem.textContent = car.plate;
+      // carItem.addEventListener('mouseenter', () => showCarDetial(car));
+      // carItem.addEventListener('mouseleave', hideCarDetail);
+      carItem.addEventListener('click', () => carOut(car));
+      document.querySelectorAll('.car-container[entryid="' + car.entry_id + '"]')[0].appendChild(carItem);
+      gsap.from(carItem, {
+        opacity: 0,
+      })
     }
-    carItem.className = 'car-item new';
-    carItem.style = '    width: var(--itemWidth);height: var(--itemHeight);line-height: var(--itemHeight);top: 0;position: absolute;padding: var(--paddingY) var(--paddingX);border: 1px solid green;text-align: center;border-radius: 12px;flex: auto;font-size: var(--fontSize);text-shadow: -1px -1px 0 #393939, 1px -1px 0 #393939, -1px 1px 0 #393939, 1px 1px 0 #393939;'
-    carItem.setAttribute('entryTime', car.timestamp);
-    carItem.setAttribute('plate', car.plate);
-    carItem.setAttribute('entryid', car.entry_id);
-    carItem.textContent = car.plate;
-    // carItem.addEventListener('mouseenter', () => showCarDetial(car));
-    // carItem.addEventListener('mouseleave', hideCarDetail);
-    carItem.addEventListener('click', () => carOut(car));
-    document.querySelectorAll('.car-container[entryid="' + car.entry_id + '"]')[0].appendChild(carItem);
-    gsap.from(carItem, {
-      opacity: 0,
-    })
+
     // sendSocketMessage(JSON.stringify(carItems))
   })
 
