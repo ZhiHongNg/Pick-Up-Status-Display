@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "6464:80"
+      - "80:80"
     depends_on:
       - db
     volumes:
