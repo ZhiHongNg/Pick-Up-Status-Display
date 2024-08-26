@@ -29,6 +29,7 @@ const changeOption = () => {
 const option = ref({
   showNetworkStatus: false,
   appTitle: '珠海城轨网约车上客区通道',
+  stayTimeLimit: 5,
   appTitleFontSize: 30,
   entryTitleFontSize: 24,
   itemWidth: 505,
@@ -51,6 +52,20 @@ const showCarDetial = (carItem) => {
   carDetailDialogRef.value.showDialog(carItem, carItemNode.offsetLeft + carItemNode.offsetWidth + 10, carItemNode.offsetTop + carItemNode.offsetHeight)
 }
 const moveCount = ref(0)
+const checkIsOverTime = () => {
+  let carItems = document.querySelectorAll('.car-item');
+
+  const timeLimit = Number(option.value.stayTimeLimit) * 60
+  const outCarsArray = []
+  carItems.forEach(car => {
+    if ((Math.abs(Number(car.getAttribute('entryTime')) - moment().unix())) >= timeLimit) {
+      outCarsArray.push({
+        plate: car.getAttribute('plate')
+      })
+    }
+  })
+  carOut(outCarsArray)
+}
 const itemMove = () => {
   if (keyadown.value == true && moveCount.value === 1) {
     return
@@ -238,7 +253,6 @@ const handleNewMessage = (carsStatus) => {
       return false
     }
   })
-console.log('inCars',JSON.stringify(inCars))
   carIn(inCars)
   carOut(outCars)
 }
@@ -396,6 +410,7 @@ onMounted(async () => {
   connectWebSocket()
   interval.value = setInterval(() => {
     itemMove()
+    checkIsOverTime()
     updateCarItemColor()
   }, 1000)
   window.addEventListener('resize', () => {

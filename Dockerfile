@@ -2,7 +2,7 @@
 FROM php:8.1-fpm
 # 更新包列表并安装 MySQL 客户端
 RUN apt-get update && \
-    apt-get install -y default-mysql-client && \
+    apt-get install -y default-mysql-client && apt-get install -y tcpdump && \
     apt-get clean
 # 安装必要的工具和库
 RUN apt-get install -y \

@@ -3,6 +3,7 @@
 namespace app\VIID\controller;
 
 use app\common\controller\Frontend;
+use app\wechat\controller\Parking;
 use SimpleXMLElement;
 use think\cache\driver\Redis;
 use think\facade\Db;
@@ -33,13 +34,23 @@ class MotorVehicles extends Frontend
         ini_set('upload_max_filesize', '50M');
         $raw_data = file_get_contents('php://input');
         $raw_data  =json_decode($raw_data,true);
-        $car = [];
+        $cars = [];
         if(!empty($raw_data)){
             if(isset($raw_data['MotorVehicleListObject'])){
                 foreach ($raw_data['MotorVehicleListObject']['MotorVehicleObject'] as $v){
-                    $car[] = ['PlateReliability'=>$v['PlateReliability'],'PlateNo'=>$v['PlateNo'],'PassTime'=>$v['PassTime']];
+                    $cars[] = ['PlateReliability'=>$v['PlateReliability'],'PlateNo'=>$v['PlateNo'],'PassTime'=>$v['PassTime'],'DeviceID'=>$v['DeviceID']];
                 }
-                file_put_contents('8964', 'plate action' . json_encode($car) . PHP_EOL, FILE_APPEND);
+                if(!empty($cars)){
+                    $carStatus = [];
+                    foreach ($cars as $car){
+                        $carStatus[] = ['time'=>time(),'plate'=>$car['PlateNo'],'camId'=>$car['DeviceID']];
+                    }
+                    file_put_contents('$carStatus', '' . json_encode($carStatus) . PHP_EOL, FILE_APPEND);
+
+                    $this->model->handleCar($carStatus);
+                }
+
+
             }
         }
     }

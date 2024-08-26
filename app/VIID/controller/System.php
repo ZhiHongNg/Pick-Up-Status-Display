@@ -48,9 +48,11 @@ class System extends Frontend
 
 //        header('Content-Type: text/json; charset=utf-8');
         $raw_data = file_get_contents('php://input');
-        if(!$this->redis->get('DeviceId')){
+        $raw_data = json_decode($raw_data, true);
+
+        if(!$this->redis->get('DeviceId_'.$raw_data['RegisterObject']['DeviceID'])){
             http_response_code(401);
-            $this->redis->set('DeviceId', 45010001491119000101);
+            $this->redis->set('DeviceId_'.$raw_data['RegisterObject']['DeviceID'], $raw_data['RegisterObject']['DeviceID']);
             echo json_encode([
                 'error' => 'Unauthorized',
                 'message' => 'You are not authorized to access this resource.'
@@ -58,7 +60,7 @@ class System extends Frontend
             exit;
 
         }else{
-            echo json_encode(['ResponseStatusObject' => ['RequestURL' => '/VIID/System/Register', 'StatusCode' => 0, 'StatusString' => 'success', 'Id' => '45010001491119000101', 'LocalTime' => date('Y-m-d H:i:s')]]);
+            echo json_encode(['ResponseStatusObject' => ['RequestURL' => '/VIID/System/Register', 'StatusCode' => 0, 'StatusString' => 'success', 'Id' => ''.$raw_data['RegisterObject']['DeviceID'], 'LocalTime' => date('Y-m-d H:i:s')]]);
             exit;
         }
 
