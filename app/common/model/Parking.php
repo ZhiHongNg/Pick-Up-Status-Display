@@ -3,7 +3,6 @@
 namespace app\common\model;
 
 use think\cache\driver\Redis;
-
 use think\facade\Db;
 use think\Model;
 
@@ -13,7 +12,8 @@ class Parking extends Model
     protected $autoWriteTimestamp = true;
     protected $append = [];
 
-    private $provinces = ["京", "津", "沪", "渝", "冀", "豫", "云", "辽", "黑", "湘", "皖", "鲁", "新", "苏", "浙", "赣", "鄂", "桂", "甘", "晋", "蒙", "陕", "吉", "闽", "贵", "粤", "青", "藏", "川", "宁", "琼"];
+//    private $provinces = ["京", "津", "沪", "渝", "冀", "豫", "云", "辽", "黑", "湘", "皖", "鲁", "新", "苏", "浙", "赣", "鄂", "桂", "甘", "晋", "蒙", "陕", "吉", "闽", "贵", "粤", "青", "藏", "川", "宁", "琼"];
+    private $provinces = ["渝", "冀", "豫", "云", "辽", "湘", "苏", "浙", "赣", "鄂", "桂", "蒙", "闽", "贵", "粤", "皖", "鲁", "琼"];
     private $regions = ["1-8号上车点（A通道）", "9-15号上车点（B通道）"];
 
     private function getRandomElement($array)
@@ -119,8 +119,9 @@ class Parking extends Model
     {
         $redis = new  Redis();
 
-        foreach ($carStatus as $car) {
-            if (!$this->isLicensePlate($car['plate'])) continue;
+        foreach ($carStatus as &$car) {
+            $car['plate'] = $this->isLicensePlate($car['plate']);
+            if (!$car['plate']) continue;
             $entryInfo = Db::table('he_entry')->where('inCamId', '=', intval($car['camId']))->find();
             if (!empty($entryInfo)) {
                 //car in
@@ -138,9 +139,6 @@ class Parking extends Model
                 $redis->set('car_in_' . $car['plate'], json_encode($car));
 
             } else {
-                if($car['camId']==64||$car['camId']==65){
-
-                }
                 $entryInfo = Db::table('he_entry')->where('outCamId', '=', intval($car['camId']))->find();
                 if (!empty($entryInfo)) {
                     $car['entry_id'] = $entryInfo['id'];
@@ -157,16 +155,33 @@ class Parking extends Model
 
             }
 
+
         }
 
     }
     public function isLicensePlate($plate)
     {
-        //9 10
         $parkingModel = new \app\common\model\Parking();
         if (strlen($plate) === 9 || strlen($plate) === 10) {
             $provinces = $parkingModel->getProvinces();
             $flag = in_array(mb_substr($plate, 0, 1), $provinces);
+            if ($flag) {
+                if (mb_substr($plate, 0, 1) === '皖'||mb_substr($plate, 0, 1) === '闽' || mb_substr($plate, 0, 1) === '鲁') {
+                    //$plate = 皖C0U056
+                    $plate = str_replace(mb_substr($plate, 0, 1), '粤', $plate);
+
+                }
+                //如果是电车
+                if (strlen($plate) === 10) {
+                    if (mb_substr($plate, 1, 2) === 'C0') {
+                        $plate = str_replace(mb_substr($plate, 1, 2), 'CD', $plate);
+                    }
+                }
+                return $plate;
+
+            } else {
+                return false;
+            }
             return $flag;
         } else {
             return false;

@@ -3,10 +3,7 @@
 namespace app\VIID\controller;
 
 use app\common\controller\Frontend;
-use app\wechat\controller\Parking;
-use SimpleXMLElement;
 use think\cache\driver\Redis;
-use think\facade\Db;
 
 class MotorVehicles extends Frontend
 {
@@ -38,6 +35,7 @@ class MotorVehicles extends Frontend
         if(!empty($raw_data)){
             if(isset($raw_data['MotorVehicleListObject'])){
                 foreach ($raw_data['MotorVehicleListObject']['MotorVehicleObject'] as $v){
+                    file_put_contents('video_to_php', json_encode($raw_data) . PHP_EOL, FILE_APPEND);
                     $cars[] = ['PlateReliability'=>$v['PlateReliability'],'PlateNo'=>$v['PlateNo'],'PassTime'=>$v['PassTime'],'DeviceID'=>$v['DeviceID']];
                 }
                 if(!empty($cars)){

@@ -14,7 +14,20 @@ const dateEndChange = (v) => {
 }
 const hideDialog = () => {
   dialogVisable.value = false
-
+}
+const rebootCameDownText = ref('')
+const rebootTime = ref(3)
+const rebooting = ref(false)
+const reboot = () => {
+  uni.clearStorageSync('option')
+  rebooting.value = true
+  setInterval(()=>{
+    rebootCameDownText.value = rebootTime.value+'秒后重启'
+    rebootTime.value = rebootTime.value-1
+  },1000)
+  setTimeout(() => {
+    window.location.reload()
+  },3000)
 }
 const showDialog = (option) => {
   console.log('option', option)
@@ -111,6 +124,13 @@ defineExpose({
           </div>
         </div>
         <div class="item">
+          <div class="name">车辆停留时长(分钟)</div>
+          <div class="value">
+            <NumberController :min="1" :max="60" v-model="formData.stayTimeLimit"
+                              @change="change"></NumberController>
+          </div>
+        </div>
+        <div class="item">
           <div class="name">显示网络连接状态</div>
           <div class="value">
             <switch :checked="formData.showNetworkStatus?true:false" @change="switchChange"/>
@@ -167,6 +187,9 @@ defineExpose({
       </div>
       <div style="width:100%">
         <button @click="hideDialog" style="width: 300px;background: #607D8B;color: white;border-radius: var(--default-radius);margin-top: 30px;}">关闭面板</button>
+        <button @click="reboot" style="width: 300px;background: #009688;color: white;border-radius: var(--default-radius);margin-top: 30px;}">
+          {{rebooting?rebootCameDownText:'清除缓存并重启'}}
+        </button>
       </div>
     </div>
   </main>

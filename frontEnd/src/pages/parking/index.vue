@@ -30,15 +30,15 @@ const option = ref({
   showNetworkStatus: false,
   appTitle: '珠海城轨网约车上客区通道',
   stayTimeLimit: 5,
-  appTitleFontSize: 30,
-  entryTitleFontSize: 24,
-  itemWidth: 505,
-  itemHeight: 90,
+  appTitleFontSize: 100,
+  entryTitleFontSize: 100,
+  itemWidth: 645,
+  itemHeight: 160,
   spaceX: 40,
-  spaceY: 15,
+  spaceY: 30,
   paddingX: 5,
   paddingY: 5,
-  fontSize: 35,
+  fontSize: 110,
 })
 const scoketLive = ref('未连接')
 const cars = ref([])
