@@ -30,7 +30,7 @@ class Parking extends Frontend
     {
         $cars = $this->request->param();
         foreach ($cars as $car) {
-            $this->model->where('id', $car['id'])->update(['is_send' => 1]);
+            $this->model->where('plate', $car['plate'])->update(['is_send' => 1]);
         }
         return $cars;
     }
@@ -52,7 +52,7 @@ class Parking extends Frontend
 
     public function store()
     {
-        file_put_contents('access_log', 'store action' . json_encode($this->request->post()) . PHP_EOL, FILE_APPEND);
+//        file_put_contents('access_log', 'store action' . json_encode($this->request->post()) . PHP_EOL, FILE_APPEND);
         $carStatus = $this->request->post();
         $this->model->handleCar($carStatus);
     }
@@ -108,7 +108,7 @@ class Parking extends Frontend
 
     public function clear()
     {
-        file_put_contents('access_log', 'clear action' . PHP_EOL, FILE_APPEND);
+//        file_put_contents('access_log', 'clear action' . PHP_EOL, FILE_APPEND);
 
         $carKeys = $this->redis->keys('*');
         foreach ($carKeys as $key) {
@@ -125,6 +125,7 @@ class Parking extends Frontend
     {
 
         $carKeys = $this->redis->keys('*');
+        dd($carKeys);
         $cars = [];
         foreach ($carKeys as $key) {
             dd($this->redis->get($key));

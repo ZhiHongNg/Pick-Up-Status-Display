@@ -16,8 +16,8 @@ namespace think;
  * 不在tp加载后判断，为了安全的使用exit()
  * 使用绝对路径，确保花里胡哨的url均能正确判定和跳转
  */
-$raw_data = file_get_contents('php://input');
-file_put_contents('request', 'plate action' . $raw_data . PHP_EOL, FILE_APPEND);
+//$raw_data = file_get_contents('php://input');
+//file_put_contents('request', 'plate action' . $raw_data . PHP_EOL, FILE_APPEND);
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     header("Access-Control-Allow-Credentials: true");
     header("Access-Control-Max-Age: 86400");

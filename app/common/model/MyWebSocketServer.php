@@ -30,67 +30,26 @@ class MyWebSocketServer implements MessageComponentInterface
     {
 
         $allClients = $this->getClients();
-        $clearAllCats = false;
-        if ($this->redis->keys('clear')) {
-            $clearAllCats = true;
-        }
+
         $currentClient = $client->httpRequest->getUri()->getQuery();
         $carKeys = $this->redis->keys('car_*');
         $cars = [];
-        $httpData = [];
         if (!empty($carKeys)) {
             foreach ($carKeys as $key) {
                 $cars[] = json_decode($this->redis->get($key), 1);
                 foreach ($allClients as $thatClient) {
-                    if ($this->redis->get('clear')) {
-                        $this->redis->set($thatClient . 'clear', 1);
-                    }
                     $this->redis->set($thatClient . '_' . $key, json_decode($this->redis->get($key), 1));
                 }
                 $this->redis->del($key);
             }
-            foreach ($cars as $car) {
-
-                $httpData[] = [
-                    'plate' => $car['plate'],
-                    'entry_id' => $car['entry_id'],
-                    'status' => $car['status'],
-                    'id' => $car['id'],
-                ];
-            }
-            $responseData = $this->post_request('http://localhost/wechat/Parking/update', json_encode($httpData));
-        }
-        //获取现在的用户
-
-        foreach ($allClients as $thatClient) {
-            if ($this->redis->get('clear')) {
-                echo 'clear,clearclear,clearclear,clearclear,clearclear,clearclear,clear';
-                $this->redis->set($thatClient . 'clear', 1);
-            }
         }
         $clientCarKeys = $this->redis->keys($currentClient . '_*');
-
-
         $cars = [];
-        file_put_contents('access_log', '所有key:' . PHP_EOL, FILE_APPEND);
-        file_put_contents('access_log', json_encode($this->redis->keys('*')) . PHP_EOL, FILE_APPEND);
         foreach ($clientCarKeys as $key) {
             $cars[] = $this->redis->get($key);
             $this->redis->del($key);
         }
-        if ($this->redis->get($currentClient . 'clear')) {
-            $this->redis->set('clear', false);
-            $this->redis->set($currentClient . 'clear', 0);
-            file_put_contents('access_log', '清除:' . PHP_EOL, FILE_APPEND);
-
-            return json_encode(['type' => 'clear', 'data' => []]);
-        } else {
-            if(!empty($cars)){
-                file_put_contents('access_log', '更新:'.json_encode($cars) . PHP_EOL, FILE_APPEND);
-
-            }
             return json_encode(['type' => 'update', 'data' => $cars]);
-        }
 
 
     }
@@ -117,7 +76,7 @@ class MyWebSocketServer implements MessageComponentInterface
                 'plate' => $car['plate'],
             ];
         }
-        $responseData = $this->post_request('http://localhost/wechat/Parking/delete', json_encode($httpData));
+//        $responseData = $this->post_request('http://localhost/wechat/Parking/delete', json_encode($httpData));
     }
 
     public function onClose(ConnectionInterface $conn)

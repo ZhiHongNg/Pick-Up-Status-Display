@@ -142,9 +142,9 @@ class Parking extends Model
                 if ($car['camId'] == 64 || $car['camId'] == 65) {
 
                 }
-                file_put_contents('carOut', json_encode($car) . FILE_APPEND);
+//                file_put_contents('carOut', json_encode($car) . FILE_APPEND);
 
-                file_put_contents('carOutEntry', json_encode($entryInfo) . FILE_APPEND);
+//                file_put_contents('carOutEntry', json_encode($entryInfo) . FILE_APPEND);
 
                 //$entryInfo = Db::table('he_entry')->where('outCamId', '=', intval($car['camId']))->find();
                 //$car['entry_id'] = $entryInfo['id'];
@@ -155,7 +155,7 @@ class Parking extends Model
 //                $carInStatus->status = 2;
 //                $carInStatus->save();
 //                $car['id'] = $carInStatus->id;
-                file_put_contents('car_out_info', json_encode($car) . FILE_APPEND);
+//                file_put_contents('car_out_info', json_encode($car) . FILE_APPEND);
                 $redis->set('car_out_' . $car['plate'], json_encode($car));
 
                 $currentHour = date('H');

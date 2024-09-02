@@ -281,7 +281,7 @@ const carIn = ((carItems) => {
         carItem = document.createElement('div')
       }
       carItem.className = 'car-item new';
-      carItem.style = '    width: var(--itemWidth);height: var(--itemHeight);line-height: var(--itemHeight);top: 0;position: absolute;padding: var(--paddingY) var(--paddingX);text-align: center;border-radius: 12px;flex: auto;font-size: var(--fontSize);text-shadow: -1px -1px 0 #393939, 1px -1px 0 #393939, -1px 1px 0 #393939, 1px 1px 0 #393939;color:white;'
+      carItem.style = '    width: var(--itemWidth);height: var(--itemHeight);line-height: var(--itemHeight);top: 0;position: absolute;padding: var(--paddingY) var(--paddingX);text-align: center;border-radius: 12px;flex: auto;font-size: var(--fontSize);text-shadow: -1px -1px 0 #393939, 1px -1px 0 #393939, -1px 1px 0 #393939, 1px 1px 0 #393939;color:white;font-weight:blod'
       carItem.setAttribute('entryTime', car.timestamp);
       carItem.setAttribute('plate', car.plate);
       carItem.setAttribute('entryid', car.entry_id);
