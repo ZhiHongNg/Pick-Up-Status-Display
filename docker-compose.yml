@@ -10,8 +10,8 @@ services:
       - "6464:80"
     depends_on:
       - db
-#    volumes:
-#      - .:/var/www/html
+    volumes:
+      - .:/var/www/html
 
   db:
     image: mysql:8.0

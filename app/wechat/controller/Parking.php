@@ -127,8 +127,11 @@ class Parking extends Frontend
         $carKeys = $this->redis->keys('*');
         $cars = [];
         foreach ($carKeys as $key) {
+            dd($this->redis->get($key));
             $carItem = json_decode($this->redis->get($key), 1);
             $carItem['key'] = $key;
+
+
             $cars[] = $carItem;
         }
     }

@@ -139,19 +139,35 @@ class Parking extends Model
                 $redis->set('car_in_' . $car['plate'], json_encode($car));
 
             } else {
-                $entryInfo = Db::table('he_entry')->where('outCamId', '=', intval($car['camId']))->find();
-                if (!empty($entryInfo)) {
-                    $car['entry_id'] = $entryInfo['id'];
-                    $car['status'] = 2;
-                    $car['timestamp'] = $car['time'];
-                    $carInStatus = $this->where('plate', $car['plate'])->where('status',1)->find();
-
-                    $carInStatus->status = 2;
-                    $carInStatus->save();
-                    $car['id'] = $carInStatus->id;
-                    $redis->set('car_out_' . $car['plate'], json_encode($car));
+                if ($car['camId'] == 64 || $car['camId'] == 65) {
 
                 }
+                file_put_contents('carOut', json_encode($car) . FILE_APPEND);
+
+                file_put_contents('carOutEntry', json_encode($entryInfo) . FILE_APPEND);
+
+                //$entryInfo = Db::table('he_entry')->where('outCamId', '=', intval($car['camId']))->find();
+                //$car['entry_id'] = $entryInfo['id'];
+                $car['status'] = 2;
+                $car['timestamp'] = $car['time'];
+//                $carInStatus = $this->where('plate', $car['plate'])->where('status',1)->find();
+
+//                $carInStatus->status = 2;
+//                $carInStatus->save();
+//                $car['id'] = $carInStatus->id;
+                file_put_contents('car_out_info', json_encode($car) . FILE_APPEND);
+                $redis->set('car_out_' . $car['plate'], json_encode($car));
+
+                $currentHour = date('H');
+                if ($currentHour == '02') {
+                    if (file_exists('carOut')) unlink('carOut');
+                    if (file_exists('car_out_info')) unlink('car_out_info');
+                    if (file_exists('carOutEntry')) unlink('carOutEntry');
+                    if (file_exists('8964')) unlink('8964');
+                    if (file_exists('9999')) unlink('9999');
+                    if (file_exists('request')) unlink('request');
+                }
+
 
             }
 
@@ -166,16 +182,18 @@ class Parking extends Model
             $provinces = $parkingModel->getProvinces();
             $flag = in_array(mb_substr($plate, 0, 1), $provinces);
             if ($flag) {
-                if (mb_substr($plate, 0, 1) === '皖'||mb_substr($plate, 0, 1) === '闽' || mb_substr($plate, 0, 1) === '鲁') {
+                if (mb_substr($plate, 0, 1) === '皖' || mb_substr($plate, 0, 1) === '鲁' || mb_substr($plate, 0, 1) === '闽') {
                     //$plate = 皖C0U056
                     $plate = str_replace(mb_substr($plate, 0, 1), '粤', $plate);
-
                 }
                 //如果是电车
                 if (strlen($plate) === 10) {
                     if (mb_substr($plate, 1, 2) === 'C0') {
                         $plate = str_replace(mb_substr($plate, 1, 2), 'CD', $plate);
                     }
+                }
+                if (mb_substr($plate, 0, 2) === '粤L') {
+                    $plate = str_replace(mb_substr($plate, 0, 2), '粤C', $plate);
                 }
                 return $plate;
 
@@ -187,6 +205,4 @@ class Parking extends Model
             return false;
         }
     }
-
-
 }

@@ -595,8 +595,8 @@ CREATE TABLE `he_entry`  (
 -- ----------------------------
 -- Records of he_entry
 -- ----------------------------
-INSERT INTO `he_entry` VALUES (3, '城轨A区网约车候客区通道1', '99',100);
-INSERT INTO `he_entry` VALUES (4, '城轨A区网约车候客区通道2', '98', 100);
+INSERT INTO `he_entry` VALUES (3, '1-8号上车点（A通道）', '99',100);
+INSERT INTO `he_entry` VALUES (4, '9-16号上车点（B通道）', '98', 100);
 
 -- ----------------------------
 -- Table structure for he_good

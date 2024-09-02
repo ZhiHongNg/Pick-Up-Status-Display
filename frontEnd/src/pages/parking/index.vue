@@ -28,17 +28,18 @@ const changeOption = () => {
 }
 const option = ref({
   showNetworkStatus: false,
-  appTitle: '珠海城轨网约车上客区通道',
-  stayTimeLimit: 5,
+  appTitle: '城际珠海站网约车上客区',
+  stayTimeLimit: 10,
   appTitleFontSize: 100,
   entryTitleFontSize: 100,
-  itemWidth: 645,
-  itemHeight: 160,
-  spaceX: 40,
+  itemWidth: 400,
+  itemHeight: 120,
+  spaceX: 18,
   spaceY: 30,
-  paddingX: 5,
+  paddingX: 15,
   paddingY: 5,
-  fontSize: 110,
+  fontSize: 74,
+  endNumberCount:3,
 })
 const scoketLive = ref('未连接')
 const cars = ref([])
@@ -106,7 +107,6 @@ const itemMove = () => {
       }
       gsap.to(item, posistion)
       lineOption2[item.getAttribute('entryid')].colNumber++;
-
       if (lineOption2[item.getAttribute('entryid')].colNumber >= preLineItemNumber) {
         lineOption2[item.getAttribute('entryid')].colNumber = 0;
         lineOption2[item.getAttribute('entryid')].lineNumber++;
@@ -159,14 +159,15 @@ const updateCarItemColor = () => {
     let timeDiffMinutes = Math.abs(a.diff(b, 'minutes'))
     let backgroundColor = '';
     if (timeDiffMinutes > level2) {
-      backgroundColor = 'red';
+      backgroundColor = '';
     } else if (timeDiffMinutes > level1) {
-      backgroundColor = 'orange';
+      backgroundColor = '';
     } else {
-      backgroundColor = 'green';
+      // backgroundColor = 'green';
     }
     if (backgroundColor) {
-      gsap.to(item, {backgroundColor, duration: 1, borderColor: backgroundColor});
+      // gsap.to(item, {backgroundColor, duration: 1, borderColor: backgroundColor});
+      gsap.to(item, {backgroundColor, duration: 1});
     }
   })
 
@@ -280,7 +281,7 @@ const carIn = ((carItems) => {
         carItem = document.createElement('div')
       }
       carItem.className = 'car-item new';
-      carItem.style = '    width: var(--itemWidth);height: var(--itemHeight);line-height: var(--itemHeight);top: 0;position: absolute;padding: var(--paddingY) var(--paddingX);border: 1px solid green;text-align: center;border-radius: 12px;flex: auto;font-size: var(--fontSize);text-shadow: -1px -1px 0 #393939, 1px -1px 0 #393939, -1px 1px 0 #393939, 1px 1px 0 #393939;'
+      carItem.style = '    width: var(--itemWidth);height: var(--itemHeight);line-height: var(--itemHeight);top: 0;position: absolute;padding: var(--paddingY) var(--paddingX);text-align: center;border-radius: 12px;flex: auto;font-size: var(--fontSize);text-shadow: -1px -1px 0 #393939, 1px -1px 0 #393939, -1px 1px 0 #393939, 1px 1px 0 #393939;color:white;'
       carItem.setAttribute('entryTime', car.timestamp);
       carItem.setAttribute('plate', car.plate);
       carItem.setAttribute('entryid', car.entry_id);
@@ -323,17 +324,27 @@ const showSetting = () => {
 const carOut = ((carItems) => {
   carOutCount.value++
   carItems.forEach(car => {
-    let carItem = document.querySelector('.car-item[plate=' + car.plate + ']')
-    gsap.to(carItem, {
-      opacity: 0,
-      transform: "scale(0.001)",
+    //查找后三位相同的车牌
+    let lastThreeDigits = car.plate.slice(-option.value.endNumberCount);
+    // let carItem = document.querySelector('.car-item[plate=' + car.plate + ']')
+    document.querySelectorAll('.car-item').forEach(carItem=>{
+      if(lastThreeDigits===carItem.getAttribute('plate').slice(-option.value.endNumberCount)){
+        gsap.to(carItem, {
+          opacity: 0,
+          transform: "scale(0.001)",
+        })
+        carItem.className = "car-item remove"
+      }
+
     })
-    carItem.className = "car-item remove"
+
   })
   sendSocketMessage(JSON.stringify(carItems))
 
 })
 onMounted(async () => {
+
+
   document.addEventListener('keydown', e => {
     if (e.key === 'b') {
       itemMove()
@@ -386,7 +397,6 @@ onMounted(async () => {
   }
   setProperty()
   await getParkingCars().catch(() => {
-    console.log('123')
     setTimeout(() => {
       window.location.reload()
     }, 1500)
@@ -405,6 +415,7 @@ onMounted(async () => {
       }
     })
   })
+
   entryCars.value = entryRegions.value
   currentTime.value = moment().format('YYYY-MM-DD HH:mm:ss');
   connectWebSocket()
@@ -412,6 +423,9 @@ onMounted(async () => {
     itemMove()
     checkIsOverTime()
     updateCarItemColor()
+    document.querySelector('.middle-line').style.top = (document.querySelector('.app-title').clientHeight+document.querySelector('.area-item').clientHeight)+'px'
+    document.querySelector('.middle-line').style.height = 'calc(100vh - '+(document.querySelector('.app-title').clientHeight+document.querySelector('.area-item').clientHeight)+'px'+')'
+    document.querySelector('.middle-line').style.left = document.querySelector('.area-item').clientWidth+'px'
   }, 1000)
   window.addEventListener('resize', () => {
     resizeContainer()
@@ -420,15 +434,16 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div style="width: 100vw;height: 100vh;background-color: #141623 ">
+  <div style="width: 100vw;height: 100vh;background-color: #414e9c ">
+    <div class="middle-line"></div>
     <div class="status-container" v-show="option.showNetworkStatus">
       连接状态:
       <span style="color: green">{{ scoketLive }}</span>
     </div>
-    <h1 style="text-align: center;padding: 30px 0;font-size: var(--appTitleFontSize)" @click="clearAllCar">{{ option.appTitle }}</h1>
+    <h1 class="app-title" style="color:white;text-align: center;padding: 30px 0;font-size: var(--appTitleFontSize)" @click="clearAllCar">{{ option.appTitle }}</h1>
     <div class="area-container">
       <div class="area-item" v-for="entryRegion in entryRegions" :entryid="entryRegion.id">
-        <div class="name" @click="showSetting" style="font-size: var(--entryTitleFontSize)">{{ entryRegion.name }}</div>
+        <div class="name"  @click="showSetting" style="font-size: var(--entryTitleFontSize)">{{ entryRegion.name }}</div>
         <div class="area-container">
           <div class="car-container" :entryid="entryRegion.id">
             <div class="car-item" v-for="(car,index) in entryRegion.list" :entryTime="car.timestamp" :key="index"
@@ -454,9 +469,7 @@ onMounted(async () => {
 </template>
 
 <style lang="scss">
-* {
-  color: white;
-}
+
 
 .area-container {
   padding-bottom: 5px;
@@ -468,9 +481,17 @@ onMounted(async () => {
   width: 50%;
 }
 
+.middle-line{
+  width: 10px;
+  height: 100vh;
+  position: fixed;
+  border-right: 15px dashed white;
+}
 .area-item .name {
-  background-color: rgba(0, 128, 0, 0.32);
-  border: 2px solid rgba(0, 128, 0, 0.48);
+  //background-color: rgba(0, 128, 0, 0.32);
+  //border: 2px solid rgba(0, 128, 0, 0.48);
+  color:#FFEB3B;
+  font-weight: bold;
   flex: 1;
   padding: 15px;
   font-size: 30px;
@@ -497,7 +518,7 @@ onMounted(async () => {
   position: absolute;
   padding: var(--paddingY) var(--paddingX);
   //margin: var(--spaceY) var(--spaceX);
-  border: 1px solid green;
+  //border: 1px solid green;
   text-align: center;
   border-radius: 12px;
   flex: auto;
@@ -506,11 +527,13 @@ onMounted(async () => {
   1px -1px 0 #393939,
   -1px 1px 0 #393939,
   1px 1px 0 #393939;
+  font-weight: bold;
 }
 
 .status-container {
   position: fixed;
   right: 15px;
+  color:white;
 }
 
 </style>

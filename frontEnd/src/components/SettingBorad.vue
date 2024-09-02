@@ -139,6 +139,12 @@ defineExpose({
 
 
         </div>
+        <div class="item">
+          <div class="name">车牌位数</div>
+          <div class="value">
+            <NumberController :min="10" :max="100" v-model="formData.endNumberCount" @change="change"></NumberController>
+          </div>
+        </div>
 
       </div>
       <div class="form-container" v-if="activeIndex===1">

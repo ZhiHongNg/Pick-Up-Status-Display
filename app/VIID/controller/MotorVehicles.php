@@ -35,22 +35,17 @@ class MotorVehicles extends Frontend
         if(!empty($raw_data)){
             if(isset($raw_data['MotorVehicleListObject'])){
                 foreach ($raw_data['MotorVehicleListObject']['MotorVehicleObject'] as $v){
-                    file_put_contents('video_to_php', json_encode($raw_data) . PHP_EOL, FILE_APPEND);
+                    if($v['PlateReliability']<96&&$v['DeviceId']!=100)continue;
                     $cars[] = ['PlateReliability'=>$v['PlateReliability'],'PlateNo'=>$v['PlateNo'],'PassTime'=>$v['PassTime'],'DeviceID'=>$v['DeviceID']];
                 }
                 if(!empty($cars)){
                     $carStatus = [];
                     foreach ($cars as $car){
-                        $carStatus[] = ['time'=>time(),'plate'=>$car['PlateNo'],'camId'=>$car['DeviceID']];
+                        $carStatus[] = ['time'=>time(),'plate'=>$car['PlateNo'],'camId'=>$car['DeviceID'],'PlateReliability'=>$car['PlateReliability']];
                     }
-                    file_put_contents('$carStatus', '' . json_encode($carStatus) . PHP_EOL, FILE_APPEND);
-
                     $this->model->handleCar($carStatus);
                 }
-
-
             }
         }
     }
-
 }

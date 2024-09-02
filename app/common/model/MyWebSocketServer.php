@@ -38,14 +38,11 @@ class MyWebSocketServer implements MessageComponentInterface
         $carKeys = $this->redis->keys('car_*');
         $cars = [];
         $httpData = [];
-        print_r("this->redis->get('clear')");
-        print_r($this->redis->get('clear'));
         if (!empty($carKeys)) {
             foreach ($carKeys as $key) {
                 $cars[] = json_decode($this->redis->get($key), 1);
                 foreach ($allClients as $thatClient) {
                     if ($this->redis->get('clear')) {
-                        echo 'clear,clearclear,clearclear,clearclear,clearclear,clearclear,clear';
                         $this->redis->set($thatClient . 'clear', 1);
                     }
                     $this->redis->set($thatClient . '_' . $key, json_decode($this->redis->get($key), 1));
