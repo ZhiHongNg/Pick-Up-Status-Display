@@ -446,7 +446,7 @@ onMounted(async () => {
         <div class="name"  @click="showSetting" style="font-size: var(--entryTitleFontSize)">{{ entryRegion.name }}</div>
         <div class="area-container">
           <div class="car-container" :entryid="entryRegion.id">
-            <div class="car-item" v-for="(car,index) in entryRegion.list" :entryTime="car.timestamp" :key="index"
+            <div class="car-item" v-for="(car,index) in entryRegion.list" :entryTime="car.timestamp" :key="index" style="font-weight: bold"
                  :entryid="entryRegion.id"
                  :plate="car.plate">
               {{ car.plate }}
