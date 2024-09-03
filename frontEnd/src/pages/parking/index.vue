@@ -18,6 +18,7 @@ const setProperty = () => {
   document.documentElement.style.setProperty('--paddingY', option.value.paddingY + 'px');
   document.documentElement.style.setProperty('--entryTitleFontSize', option.value.entryTitleFontSize + 'px');
   document.documentElement.style.setProperty('--appTitleFontSize', option.value.appTitleFontSize + 'px');
+  document.documentElement.style.setProperty('--contentLeft', option.value.contentLeft + 'px');
 }
 const changeOption = () => {
   uni.setStorage({
@@ -40,6 +41,7 @@ const option = ref({
   paddingY: 5,
   fontSize: 74,
   endNumberCount:3,
+  contentLeft:300,
 })
 const scoketLive = ref('未连接')
 const cars = ref([])
@@ -281,14 +283,14 @@ const carIn = ((carItems) => {
         carItem = document.createElement('div')
       }
       carItem.className = 'car-item new';
-      carItem.style = '    width: var(--itemWidth);height: var(--itemHeight);line-height: var(--itemHeight);top: 0;position: absolute;padding: var(--paddingY) var(--paddingX);text-align: center;border-radius: 12px;flex: auto;font-size: var(--fontSize);text-shadow: -1px -1px 0 #393939, 1px -1px 0 #393939, -1px 1px 0 #393939, 1px 1px 0 #393939;color:white;font-weight:blod'
+      carItem.style = '    width: var(--itemWidth);height: var(--itemHeight);line-height: var(--itemHeight);top: 0;position: absolute;padding: var(--paddingY) var(--paddingX);text-align: left;border-radius: 12px;flex: auto;font-size: var(--fontSize);text-shadow: -1px -1px 0 #393939, 1px -1px 0 #393939, -1px 1px 0 #393939, 1px 1px 0 #393939;color:white;font-weight:blod'
       carItem.setAttribute('entryTime', car.timestamp);
       carItem.setAttribute('plate', car.plate);
       carItem.setAttribute('entryid', car.entry_id);
       carItem.textContent = car.plate;
       // carItem.addEventListener('mouseenter', () => showCarDetial(car));
       // carItem.addEventListener('mouseleave', hideCarDetail);
-      carItem.addEventListener('click', () => carOut(car));
+      carItem.addEventListener('click', () => carOut([car]));
       document.querySelectorAll('.car-container[entryid="' + car.entry_id + '"]')[0].appendChild(carItem);
       gsap.from(carItem, {
         opacity: 0,
@@ -342,6 +344,38 @@ const carOut = ((carItems) => {
   sendSocketMessage(JSON.stringify(carItems))
 
 })
+const mockCar = (entry_id)=>{
+  let cars = [
+    {plate:"粤CD8Q263",time:"1725327232",camId:98,entry_id:entry_id},
+    {plate:"粤A7B123",time:"1725327232",camId:98,entry_id:entry_id},
+    {plate:"粤B6C456",time:"1725327232",camId:98,entry_id:entry_id},
+    {plate:"粤D9E789",time:"1725327232",camId:98,entry_id:entry_id},
+    {plate:"粤E4F012",time:"1725327232",camId:98,entry_id:entry_id},
+    {plate:"粤F3G345",time:"1725327232",camId:98,entry_id:entry_id},
+    {plate:"粤G2H678",time:"1725327232",camId:98,entry_id:entry_id},
+    {plate:"粤H1J901",time:"1725327232",camId:98,entry_id:entry_id},
+    {plate:"粤J8K234",time:"1725327232",camId:98,entry_id:entry_id},
+    {plate:"粤K7L567",time:"1725327232",camId:98,entry_id:entry_id},
+    {plate:"粤L6M890",time:"1725327232",camId:98,entry_id:entry_id},
+    {plate:"粤M5N123",time:"1725327232",camId:98,entry_id:entry_id},
+    {plate:"粤N4O456",time:"1725327232",camId:98,entry_id:entry_id},
+    {plate:"粤O3P789",time:"1725327232",camId:98,entry_id:entry_id},
+    {plate:"粤P2Q012",time:"1725327232",camId:98,entry_id:entry_id},
+    {plate:"粤Q1R345",time:"1725327232",camId:98,entry_id:entry_id},
+    {plate:"粤R9S678",time:"1725327232",camId:98,entry_id:entry_id},
+    {plate:"粤S8T901",time:"1725327232",camId:98,entry_id:entry_id},
+    {plate:"粤T7U234",time:"1725327232",camId:98,entry_id:entry_id},
+    {plate:"粤U6V567",time:"1725327232",camId:98,entry_id:entry_id},
+    {plate:"粤V5W890",time:"1725327232",camId:98,entry_id:entry_id}
+  ]
+  // cars = JSON.parse(cars)
+  console.log(cars)
+  carIn(cars)
+
+}
+const carClick = ()=>{
+  console.log('3')
+}
 onMounted(async () => {
 
 
@@ -440,13 +474,14 @@ onMounted(async () => {
       连接状态:
       <span style="color: green">{{ scoketLive }}</span>
     </div>
-    <h1 class="app-title" style="color:white;text-align: center;padding: 30px 0;font-size: var(--appTitleFontSize)" @click="clearAllCar">{{ option.appTitle }}</h1>
+<!--    @click="clearAllCar"-->
+    <h1 class="app-title" style="color:white;text-align: center;padding: 30px 0;font-size: var(--appTitleFontSize)" @click="showSetting">{{ option.appTitle }}</h1>
     <div class="area-container">
-      <div class="area-item" v-for="entryRegion in entryRegions" :entryid="entryRegion.id">
-        <div class="name"  @click="showSetting" style="font-size: var(--entryTitleFontSize)">{{ entryRegion.name }}</div>
+      <div class="area-item"  v-for="entryRegion in entryRegions" :entryid="entryRegion.id">
+        <div class="name" @click="mockCar(entryRegion.id)"   style="font-size: var(--entryTitleFontSize)">{{ entryRegion.name }}</div>
         <div class="area-container">
           <div class="car-container" :entryid="entryRegion.id">
-            <div class="car-item" v-for="(car,index) in entryRegion.list" :entryTime="car.timestamp" :key="index" style="font-weight: bold"
+            <div  class="car-item" v-for="(car,index) in entryRegion.list" :entryTime="car.timestamp" :key="index" style="font-weight: bold"
                  :entryid="entryRegion.id"
                  :plate="car.plate">
               {{ car.plate }}
@@ -502,6 +537,7 @@ onMounted(async () => {
 .car-container {
   padding: 7.5px 5px;
   position: relative;
+  left:var(--contentLeft);
 }
 
 .car-item.new {
@@ -548,6 +584,7 @@ onMounted(async () => {
   --paddingY: 20px;
   --appTitleFontSize: 30px;
   --entryTitleFontSize: 24px;
+  --contentLeft: 300px;
 }
 
 body {

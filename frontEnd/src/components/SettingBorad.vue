@@ -190,6 +190,12 @@ defineExpose({
             <NumberController :min="10" :max="100" v-model="formData.paddingY" @change="change"></NumberController>
           </div>
         </div>
+        <div class="item">
+          <div class="name">左边距</div>
+          <div class="value">
+            <NumberController :min="10" :max="100" v-model="formData.contentLeft" @change="change"></NumberController>
+          </div>
+        </div>
       </div>
       <div style="width:100%">
         <button @click="hideDialog" style="width: 300px;background: #607D8B;color: white;border-radius: var(--default-radius);margin-top: 30px;}">关闭面板</button>
