@@ -1,15 +1,21 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-			"path": "pages/Gamble/index",
+			"path": "pages/Gamble/index3",
 			"style": {
-				"navigationBarTitleText": "分1类"
+				"navigationBarTitleText": "V3"
 			}
 		},
 		{
-			"path": "pages/Parking/index",
+			"path": "pages/Gamble/index2",
 			"style": {
-				"navigationBarTitleText": "分类"
+				"navigationBarTitleText": "V2"
+			}
+		},
+		{
+			"path": "pages/Gamble/index",
+			"style": {
+				"navigationBarTitleText": ""
 			}
 		}
 	],

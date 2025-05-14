@@ -1,4 +1,5 @@
 import RequestClass from "@/utils/RequestClass";
+import * as XLSX from "xlsx";
 
 export const Other = new RequestClass('Other')
 
@@ -48,3 +49,52 @@ export function validateIDCard(idCard) {
     // 比较计算出的校验码和身份证最后一位
     return checkCode === idCard[17];
 }
+// 传入 JSON 数据，导出为 Excel
+export function exportJSONToExcel(sheetsData, fileName = "data.xlsx") {
+    const workbook = XLSX.utils.book_new();
+
+    sheetsData.forEach(({ sheetName, data, headers,summaryData }) => {
+        const fields = Object.keys(headers);
+
+        // 先将数据和header合并，并生成 Excel 工作表
+        const dataWithHeaders = [
+            headers,
+            ...data.map(item => {
+                const row = {};
+                fields.forEach(field => {
+                    row[field] = item[field];
+                });
+                return row;
+            }),
+        ];
+
+        const worksheet = XLSX.utils.json_to_sheet(dataWithHeaders, { skipHeader: true });
+        // 如果 summaryData 存在，将它插入到指定单元格
+        if (summaryData) {
+            const {
+                currentWin, currentWinValue,
+                playCountLabel, playCount,
+                flowLabel, flow,
+                reasonLabel, reason
+            } = summaryData;
+            // 将 summaryData 插入到 Excel 工作表中的指定单元格
+            if (currentWin !== undefined) worksheet["J1"] = { t: "s", v: currentWin };
+            if (currentWinValue !== undefined) worksheet["K1"] = { t: "n", v: currentWinValue };
+            if (playCountLabel !== undefined) worksheet["J3"] = { t: "s", v: playCountLabel };
+            if (playCount !== undefined) worksheet["K3"] = { t: "n", v: playCount };
+            if (flowLabel !== undefined) worksheet["M1"] = { t: "s", v: flowLabel };
+            console.warn({ t: "s", v: flow })
+             worksheet["N1"] = { t: "s", v: flow };
+            if (reasonLabel !== undefined) worksheet["J5"] = { t: "s", v: reasonLabel };
+            if (reason !== undefined) worksheet["K5"] = { t: "s", v: reason };
+        }
+        worksheet['!ref'] = "A1:N100000"
+
+        // 将生成的工作表添加到工作簿
+        XLSX.utils.book_append_sheet(workbook, worksheet, sheetName || "Sheet");
+    });
+
+    // 导出 Excel 文件
+    XLSX.writeFile(workbook, fileName);
+}// 示例用法
+

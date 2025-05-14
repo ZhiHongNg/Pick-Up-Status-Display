@@ -1,0 +1,61 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/Gamble/index",
+			"style": {
+				"navigationBarTitleText": "分1类"
+			}
+		},
+		{
+			"path": "pages/Parking/index",
+			"style": {
+				"navigationBarTitleText": "分类"
+			}
+		}
+	],
+	"easycom": {
+		"autoscan": true,
+		"custom": {
+			"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+		}
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#f3f4f7",
+		"navigationStyle": "custom"
+	},
+	"tabBar": {
+		"color": "#7A7E83",
+		"selectedColor": "#409eff",
+		"borderStyle": "black",
+		"backgroundColor": "#ffffff",
+		"list": [
+			{
+				"pagePath": "pages/index/index",
+				"text": "首页",
+				"iconPath": "/static/images/home.png",
+				"selectedIconPath": "/static/images/home_select.png"
+			},
+			{
+				"pagePath": "pages/category/index",
+				"text": "分类",
+				"iconPath": "/static/images/category.png",
+				"selectedIconPath": "/static/images/category_selected.png"
+			},
+			{
+				"pagePath": "pages/cart/index",
+				"text": "购物车",
+				"iconPath": "/static/images/cart.png",
+				"selectedIconPath": "/static/images/cart_selected.png"
+			},
+			{
+				"pagePath": "pages/user/index",
+				"text": "个人中心",
+				"iconPath": "/static/images/my.png",
+				"selectedIconPath": "/static/images/my_select.png"
+			}
+		]
+	}
+}
